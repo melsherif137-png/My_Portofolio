@@ -42,16 +42,43 @@ const NavBar = () => {
   // ── Navbar background ──
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handle);
+    window.addEventListener("scroll", handle, { passive: true });
     return () => window.removeEventListener("scroll", handle);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   const handleClick = (id, target) => {
+    const section = document.getElementById(target);
+    if (!section) return;
+
+    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
+    const top = section.getBoundingClientRect().top + window.scrollY;
+
     setActive(id);
-    document
-      .getElementById(target)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
     setIsOpen(false);
+    document.body.style.overflow = "";
+
+    if (isMobile) {
+      const originalScrollBehavior =
+        document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+
+      requestAnimationFrame(() => {
+        window.scrollTo({ top, behavior: "auto" });
+        document.documentElement.style.scrollBehavior = originalScrollBehavior;
+      });
+
+      return;
+    }
+
+    window.scrollTo({ top, behavior: "smooth" });
   };
 
   return (
@@ -115,10 +142,11 @@ const NavBar = () => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-black/80 backdrop-blur-xl flex items-center justify-center"
+            className="fixed inset-0 z-40 bg-black/90 backdrop-blur-sm lg:backdrop-blur-xl flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
             onClick={() => setIsOpen(false)}
           >
             <motion.div
