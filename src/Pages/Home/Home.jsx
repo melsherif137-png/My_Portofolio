@@ -6,29 +6,47 @@ import { easeInOut, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 const Home = () => {
+  const texts = [
+    "I help businesses and individuals turn ideas into beautiful and functional digital solutions.",
+    "Creating modern, responsive, and high-performance web experiences.",
+  ];
+
   const [displayedText, setDisplayedText] = useState("");
-  const text =
-    "I help businesses and individuals turn ideas into beautiful and functional digital solutions.";
+  const [textIndex, setTextIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    let index = 0;
+    const currentText = texts[textIndex];
+
+    const typingSpeed = isDeleting ? 20 : 40;
 
     const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
-        setDisplayedText(text.slice(0, index + 1));
-        index++;
+      if (!isDeleting) {
+        // كتابة النص
+        const updated = currentText.slice(0, displayedText.length + 1);
+        setDisplayedText(updated);
 
-        if (index === text.length) {
-          clearInterval(interval);
+        // لما يخلص كتابة يبدأ مسح
+        if (updated === currentText) {
+          setTimeout(() => {
+            setIsDeleting(true);
+          }, 1200);
         }
-      }, 20);
+      } else {
+        // مسح النص
+        const updated = currentText.slice(0, displayedText.length - 1);
+        setDisplayedText(updated);
 
-      // تنظيف الـ interval
-      return () => clearInterval(interval);
-    }, 500); // 0.4 ثانية
+        // بعد ما يتمسح كله يبدأ النص اللي بعده
+        if (updated === "") {
+          setIsDeleting(false);
+          setTextIndex((prev) => (prev + 1) % texts.length);
+        }
+      }
+    }, typingSpeed);
 
     return () => clearTimeout(timeout);
-  }, []);
+  }, [displayedText, isDeleting, textIndex]);
 
   return (
     <section
@@ -144,6 +162,7 @@ const Home = () => {
             <FaWhatsapp />
           </a>
         </motion.div>
+
         <motion.p
           initial={{ opacity: 0, y: 20, rotateX: 30 }}
           animate={{ opacity: 1, y: 0, rotateX: 0 }}
@@ -152,10 +171,10 @@ const Home = () => {
             ease: easeInOut,
             delay: 0.5,
           }}
-          className="lg:max-w-[500px] max-w-[380px] lg:text-lg text-sm font-normal text-gray-400"
+          className="lg:max-w-[500px] max-w-[380px] lg:text-lg text-sm font-normal text-gray-400 leading-relaxed h-10"
         >
           {displayedText}
-          <span className="animate-pulse">|</span>
+          <span className="animate-pulse text-[#62a58f]">|</span>
         </motion.p>
         <motion.div
           className="buttons flex lg:gap-8 gap-4 my-8"
