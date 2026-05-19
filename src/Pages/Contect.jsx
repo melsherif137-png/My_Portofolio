@@ -121,7 +121,13 @@ const Contact = () => {
               shadow: "hover:shadow-[0_0_20px_rgba(34,197,94,0.25)]",
             },
           ].map((item) => (
-            <a href={`${item.link}`}>
+            <motion.a
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              viewport={{ once: false, amount: 0.2 }}
+              href={`${item.link}`}
+            >
               <div
                 key={item.label}
                 className={`group rounded-2xl border ${item.border} ${item.bg} p-4 flex items-center gap-4 h-20 ${item.shadow} hover:shadow-2xl transition-all duration-300 ease-in-out cursor-pointer`}
@@ -142,11 +148,17 @@ const Contact = () => {
                   </p>
                 </div>
               </div>
-            </a>
+            </motion.a>
           ))}
 
           {/* Availability badge */}
-          <div className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04]">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            viewport={{ once: false, amount: 0.2 }}
+            className="mt-4 flex items-center gap-3 px-4 py-3 rounded-xl border border-emerald-500/20 bg-emerald-500/[0.04]"
+          >
             <span className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0 animate-pulse" />
             <p className="text-[12px] text-white/40 leading-snug">
               Currently{" "}
@@ -155,7 +167,7 @@ const Contact = () => {
               </span>{" "}
               — open to freelance & full-time
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* ── Right: form ── */}
@@ -170,7 +182,11 @@ const Contact = () => {
               <label className="text-[11px] uppercase tracking-[.12em] text-white/28">
                 Name
               </label>
-              <input
+              <motion.input
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                viewport={{ once: false, amount: 0.2 }}
                 name="name" // مطابق لـ {{name}} في التمبلت
                 type="text"
                 placeholder="Your name"
@@ -182,7 +198,11 @@ const Contact = () => {
               <label className="text-[11px] uppercase tracking-[.12em] text-white/28">
                 Email
               </label>
-              <input
+              <motion.input
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                viewport={{ once: false, amount: 0.2 }}
                 name="from_email" // التعديل 2: خليناها from_email عشان ماتعملش مشاكل مع الـ Reply-To
                 type="email"
                 placeholder="your@email.com"
@@ -197,7 +217,11 @@ const Contact = () => {
               Subject
             </label>
             <div className="relative w-full">
-              <select
+              <motion.select
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                viewport={{ once: false, amount: 0.2 }}
                 name="subject" // التعديل 3: ضفنا اسم الحقل عشان يروح لـ {{subject}}
                 defaultValue=""
                 required
@@ -222,7 +246,7 @@ const Contact = () => {
                 <option className="bg-neutral-900 text-white/80">
                   Just saying hi
                 </option>
-              </select>
+              </motion.select>
 
               {/* custom arrow */}
               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none">
@@ -235,7 +259,11 @@ const Contact = () => {
             <label className="text-[11px] uppercase tracking-[.12em] text-white/28">
               Message
             </label>
-            <textarea
+            <motion.textarea
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              viewport={{ once: false, amount: 0.2 }}
               name="message" // مطابق لـ {{message}} في التمبلت
               rows={5}
               placeholder="Tell me about your project or idea..."
@@ -248,7 +276,11 @@ const Contact = () => {
 
           <div className="flex items-center gap-4 mt-1">
             {/* التعديل 4: غيرنا الـ button ليتناسب مع حالة الـ loading */}
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              viewport={{ once: false, amount: 0.2 }}
               type="submit"
               disabled={loading}
               className="relative overflow-hidden bg-emerald-500/[0.06] border border-emerald-500/15 text-emerald-400 text-[13px] font-medium px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-300 hover:bg-emerald-500/[0.12] hover:border-emerald-500/30 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(16,185,129,0.25)] active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -267,7 +299,7 @@ const Contact = () => {
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
               </svg>
-            </button>
+            </motion.button>
             <span className="text-[12px] text-white/30">
               I usually reply within 24h
             </span>

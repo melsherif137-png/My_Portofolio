@@ -78,7 +78,7 @@ const TiltCard = ({ children, className, delay = 0 }) => {
     <motion.div
       initial={{ opacity: 0, y: 25, scale: 0.96 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       transition={{
         delay,
         duration: 0.6,
@@ -122,7 +122,7 @@ const Hero = () => {
         variants={container}
         initial="hidden"
         whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
+        viewport={{ once: false, amount: 0.2 }}
         className="relative z-10 grid h-full grid-cols-1 gap-10 md:grid-cols-[1fr_1.2fr]"
       >
         {/* LEFT */}
@@ -335,7 +335,7 @@ const Hero = () => {
             <motion.span
               initial={{ width: 0 }}
               whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
+              viewport={{ once: false }}
               transition={{ delay: 0.4, duration: 0.8 }}
               className="h-px flex-1 bg-white/10"
             />
@@ -393,7 +393,7 @@ const Hero = () => {
                 <motion.div
                   initial={{ rotate: -8, opacity: 0 }}
                   whileInView={{ rotate: 0, opacity: 1 }}
-                  viewport={{ once: true }}
+                  viewport={{ once: false }}
                   transition={{
                     delay: index * 0.08,
                     duration: 0.45,
@@ -439,7 +439,7 @@ const Hero = () => {
             download
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: false, amount: 0.3 }}
             transition={{
               duration: 0.7,
               ease: [0.22, 1, 0.36, 1],

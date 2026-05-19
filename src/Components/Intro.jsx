@@ -7,12 +7,13 @@ export default function Intro({ onFinish }) {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    const delays = [1000, 1200, 1800];
+    // توازن السرعة (سريع لكن مفهوم بصريًا)
+    const delays = [500, 1200, 900];
 
     if (step >= delays.length) {
       const finishTimer = setTimeout(() => {
         onFinish?.();
-      }, 700);
+      }, 250);
 
       return () => clearTimeout(finishTimer);
     }
@@ -88,7 +89,7 @@ export default function Intro({ onFinish }) {
                   filter: "blur(8px)",
                 }}
                 transition={{
-                  duration: 0.55,
+                  duration: 0.45,
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="select-none text-5xl font-thin uppercase tracking-[0.28em] text-white/80 sm:text-7xl md:text-8xl"
@@ -109,7 +110,7 @@ export default function Intro({ onFinish }) {
                   hidden: {},
                   visible: {
                     transition: {
-                      staggerChildren: 0.15,
+                      staggerChildren: 0.12,
                     },
                   },
                 }}
@@ -127,7 +128,7 @@ export default function Intro({ onFinish }) {
                     variants={{
                       hidden: {
                         opacity: 0,
-                        y: 20,
+                        y: 15,
                         filter: "blur(8px)",
                       },
                       visible: {
@@ -137,7 +138,7 @@ export default function Intro({ onFinish }) {
                       },
                     }}
                     transition={{
-                      duration: 0.45,
+                      duration: 0.35,
                       ease: [0.16, 1, 0.3, 1],
                     }}
                     className="select-none uppercase text-white/65"
@@ -164,17 +165,9 @@ export default function Intro({ onFinish }) {
               >
                 {/* Line */}
                 <motion.div
-                  initial={{
-                    scaleX: 0,
-                    opacity: 0,
-                  }}
-                  animate={{
-                    scaleX: 1,
-                    opacity: 1,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                  }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  animate={{ scaleX: 1, opacity: 1 }}
+                  transition={{ duration: 0.5 }}
                   className="mb-6 h-px w-28 origin-center bg-gradient-to-r from-transparent via-white/40 to-transparent"
                 />
 
@@ -182,8 +175,8 @@ export default function Intro({ onFinish }) {
                 <motion.h1
                   initial={{
                     opacity: 0,
-                    y: 30,
-                    filter: "blur(14px)",
+                    y: 25,
+                    filter: "blur(12px)",
                   }}
                   animate={{
                     opacity: 1,
@@ -191,7 +184,7 @@ export default function Intro({ onFinish }) {
                     filter: "blur(0px)",
                   }}
                   transition={{
-                    duration: 0.7,
+                    duration: 0.55,
                     ease: [0.16, 1, 0.3, 1],
                   }}
                   className="select-none text-white"
@@ -209,17 +202,11 @@ export default function Intro({ onFinish }) {
 
                 {/* Subtitle */}
                 <motion.p
-                  initial={{
-                    opacity: 0,
-                    y: 10,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{
-                    delay: 0.18,
-                    duration: 0.45,
+                    delay: 0.15,
+                    duration: 0.35,
                   }}
                   className="mt-3 select-none uppercase text-white/30"
                   style={{

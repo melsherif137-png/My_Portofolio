@@ -11,12 +11,26 @@ const Links = [
 
 const container = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
+  show: {
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
 };
 
 const item = {
-  hidden: { opacity: 0, y: 15, scale: 0.9 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4 } },
+  hidden: {
+    opacity: 0,
+    y: 12,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.25,
+      ease: [0.16, 1, 0.3, 1],
+    },
+  },
 };
 
 const NavBar = () => {
@@ -24,28 +38,45 @@ const NavBar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("home");
 
-  // ── Scroll Observer ──
+  // ───────────────── Scroll Spy ─────────────────
   useEffect(() => {
     const sections = document.querySelectorAll("section[id]");
+
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActive(e.target.id.toLowerCase());
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActive(entry.target.id.toLowerCase());
+          }
         });
       },
-      { rootMargin: "-45% 0px -45% 0px", threshold: 0 },
+      {
+        rootMargin: "-35% 0px -35% 0px",
+        threshold: 0,
+      },
     );
-    sections.forEach((s) => observer.observe(s));
+
+    sections.forEach((section) => observer.observe(section));
+
     return () => observer.disconnect();
   }, []);
 
-  // ── Navbar background ──
+  // ───────────────── Navbar Background ─────────────────
   useEffect(() => {
-    const handle = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handle, { passive: true });
-    return () => window.removeEventListener("scroll", handle);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
+  // ───────────────── Body Lock ─────────────────
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
 
@@ -54,103 +85,120 @@ const NavBar = () => {
     };
   }, [isOpen]);
 
+  // ───────────────── Scroll Function ─────────────────
   const handleClick = (id, target) => {
     const section = document.getElementById(target);
+
     if (!section) return;
 
-    const isMobile = window.matchMedia("(max-width: 1023px)").matches;
-    const top = section.getBoundingClientRect().top + window.scrollY;
-
     setActive(id);
+
+    // اقفل المنيو الأول
     setIsOpen(false);
+
+    // افتح السكرول
     document.body.style.overflow = "";
 
-    if (isMobile) {
-      const originalScrollBehavior =
-        document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = "auto";
-
+    // استنى frame عشان الـ menu يختفي
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        window.scrollTo({ top, behavior: "auto" });
-        document.documentElement.style.scrollBehavior = originalScrollBehavior;
+        section.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
       });
-
-      return;
-    }
-
-    window.scrollTo({ top, behavior: "smooth" });
+    });
   };
 
   return (
     <>
+      {/* ───────────────── NAVBAR ───────────────── */}
       <nav
-        className={`fixed top-0 left-0 w-full h-20 z-50 transition-all duration-500
-          ${scrolled ? "bg-black/40 backdrop-blur-2xl border-b border-white/10" : "bg-transparent"}`}
+        className={`fixed top-0 left-0 z-50 h-20 w-full transition-all duration-300
+        ${
+          scrolled
+            ? "border-b border-white/10 bg-black/70 backdrop-blur-md"
+            : "bg-transparent"
+        }`}
       >
-        <div className="h-full flex items-center justify-between lg:px-[13%] px-6">
-          {/* LOGO */}
+        <div className="flex h-full items-center justify-between px-6 lg:px-[13%]">
+          {/* ───────────────── LOGO ───────────────── */}
           <button
             onClick={() => handleClick("home", "Home")}
-            className="text-white font-bold text-2xl hover:text-[#62a58f] transition-colors"
+            className="text-2xl font-semibold tracking-wide text-white transition-colors duration-200 hover:text-[#62a58f]"
           >
             Elsherif<span className="text-[#62a58f]">.</span>
           </button>
 
-          {/* DESKTOP LINKS */}
-          <div className="hidden lg:flex items-center gap-8">
+          {/* ───────────────── DESKTOP LINKS ───────────────── */}
+          <div className="hidden items-center gap-8 lg:flex">
             {Links.map((link) => (
               <button
                 key={link.id}
                 onClick={() => handleClick(link.id, link.target)}
-                className="relative flex flex-col items-center gap-1.5 py-1"
+                className="group relative flex flex-col items-center gap-1"
               >
                 <span
-                  className={`text-sm transition-colors duration-200
-                    ${active === link.id ? "text-[#62a58f]" : "text-gray-400 hover:text-white"}`}
+                  className={`text-sm transition-colors duration-200 cursor-pointer
+                  ${
+                    active === link.id
+                      ? "text-[#62a58f]"
+                      : "text-gray-400 group-hover:text-white"
+                  }`}
                 >
                   {link.label}
                 </span>
 
-                {/* النقطة — بتظهر وتختفي بس */}
                 <span
-                  className={`w-1 h-1 rounded-full bg-[#62a58f] transition-opacity duration-200
-                    ${active === link.id ? "opacity-100" : "opacity-0"}`}
+                  className={`h-[4px] rounded-full bg-[#62a58f] transition-all duration-300 
+                  ${
+                    active === link.id
+                      ? "w-1 rounded-full opacity-100"
+                      : "w-0 opacity-0 group-hover:w-5 group-hover:opacity-100"
+                  }`}
                 />
               </button>
             ))}
           </div>
 
-          {/* MOBILE BUTTON */}
+          {/* ───────────────── MOBILE BUTTON ───────────────── */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px]"
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden"
           >
             <span
-              className={`w-6 h-[1.5px] bg-white rounded transition-all duration-300 ${isOpen ? "rotate-45 translate-y-[6px]" : ""}`}
+              className={`h-[1.5px] w-6 rounded-full bg-white transition-all duration-300
+              ${isOpen ? "translate-y-[6px] rotate-45" : ""}`}
             />
+
             <span
-              className={`w-6 h-[1.5px] bg-white rounded transition-all duration-300 ${isOpen ? "opacity-0" : ""}`}
+              className={`h-[1.5px] w-6 rounded-full bg-white transition-all duration-300
+              ${isOpen ? "opacity-0" : "opacity-100"}`}
             />
+
             <span
-              className={`w-6 h-[1.5px] bg-white rounded transition-all duration-300 ${isOpen ? "-rotate-45 -translate-y-[6px]" : ""}`}
+              className={`h-[1.5px] w-6 rounded-full bg-white transition-all duration-300
+              ${isOpen ? "-translate-y-[6px] -rotate-45" : ""}`}
             />
           </button>
         </div>
       </nav>
 
-      {/* MOBILE MENU */}
-      <AnimatePresence>
+      {/* ───────────────── MOBILE MENU ───────────────── */}
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-40 bg-black/90 backdrop-blur-sm lg:backdrop-blur-xl flex items-center justify-center"
+            className="fixed inset-0 z-40 flex items-center justify-center bg-black/95"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
+            transition={{
+              duration: 0.18,
+            }}
             onClick={() => setIsOpen(false)}
           >
             <motion.div
-              className="flex flex-col gap-8 text-center"
+              className="flex flex-col items-center gap-8 text-center"
               variants={container}
               initial="hidden"
               animate="show"
@@ -162,17 +210,22 @@ const NavBar = () => {
                   key={link.id}
                   variants={item}
                   onClick={() => handleClick(link.id, link.target)}
-                  className="relative group py-2"
+                  className="group relative py-2"
                 >
                   <span
                     className={`text-lg uppercase tracking-[0.22em] transition-colors duration-200
-                      ${active === link.id ? "text-[#62a58f]" : "text-gray-400 hover:text-white"}`}
+                    ${
+                      active === link.id
+                        ? "text-[#62a58f]"
+                        : "text-gray-400 group-hover:text-white"
+                    }`}
                   >
                     {link.label}
                   </span>
+
                   <span
-                    className={`absolute left-0 -bottom-1 h-[1px] bg-gradient-to-r from-[#1f3f35] via-[#62a58f] to-transparent transition-all duration-300
-                      ${active === link.id ? "w-full" : "w-0 group-hover:w-full"}`}
+                    className={`absolute -bottom-1 left-0 h-px bg-gradient-to-r from-[#1f3f35] via-[#62a58f] to-transparent transition-all duration-300
+  ${active === link.id ? "w-full" : "w-0 group-hover:w-full"}`}
                   />
                 </motion.button>
               ))}
